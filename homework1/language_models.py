@@ -77,7 +77,7 @@ class GramModel(baseModel):
     def get_count_table(self) -> pd.DataFrame:
         rows = []
         indices = []
-        for context in self.count.keys():
+        for context in tqdm(self.count.keys()):
             indices.append(context)
             row = []
             for word in self.wordn:
@@ -92,7 +92,7 @@ class GramModel(baseModel):
     def get_prob_table(self) -> pd.DataFrame:
         rows = []
         indices = []
-        for context in self.model_prob.keys():
+        for context in tqdm(self.model_prob.keys()):
             indices.append(context)
             row = []
             for word in self.wordn:

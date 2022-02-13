@@ -2,7 +2,6 @@ import utils
 import language_models
 import semantic_models
 import os
-import pandas as pd
 # user interface
 # problem seelction
 # problem validation
@@ -11,7 +10,7 @@ import pandas as pd
 
 
 def read_file() -> tuple:
-    file_name = input("please input the name of the corpus file.")
+    file_name = input("please input the name of the corpus file.\n")
     if not os.path.exists(file_name):
         print("wrong path. check your path again.")
         exit()
@@ -22,7 +21,7 @@ def read_file() -> tuple:
     elif seg_flag.lower() == 'n':
         seg_flag = False
     else:
-        print("please input number that make sense.")
+        print("please input number that makes sense.")
         exit()
 
     return utils.read_from_disk(file_name), seg_flag
@@ -44,7 +43,7 @@ def construct_models(training_set) -> tuple:
 
 def read_problem1_cases() -> list:
     problem_cases = []
-    s = input("Please input test sentences. put q to end input")
+    s = input("Please input test sentences. put q to end input.\n")
     while s != "q":
         problem_cases.append(s)
         s = input()
@@ -72,30 +71,31 @@ def print_ans_1_a_234(trigram_model: language_models.GramModel,
                       laplace_model: language_models.LaplaceModel,
                       katz_backoff_model: language_models.KatzModel) -> None:
 
-    # obtain counts and probs for baseline model
-    count_df = trigram_model.get_count_table()
-    counts_file_name = "trigram_counts_without_smoothing.csv"
-    count_df.to_csv(counts_file_name)
-    print("trigram counts matrix has been saved to {}".format(counts_file_name))
-    prob_df = trigram_model.get_prob_table()
-    prob_file_name = "trigram_probs_without_smoothing.csv"
-    prob_df.to_csv(prob_file_name)
-    print("trigram probs matrix has been saved to {}".format(prob_file_name))
+    # # obtain counts and probs for baseline model
+    # count_df = trigram_model.get_count_table()
+    # counts_file_name = "trigram_counts_without_smoothing.csv"
+    # count_df.to_csv(counts_file_name)
+    # print("trigram counts matrix has been saved to {}".format(counts_file_name))
+    # prob_df = trigram_model.get_prob_table()
+    # prob_file_name = "trigram_probs_without_smoothing.csv"
+    # prob_df.to_csv(prob_file_name)
+    # print("trigram probs matrix has been saved to {}".format(prob_file_name))
 
     # obtain counts and probs for laplace model
     count_df = laplace_model.get_count_table()
     counts_file_name = "laplace_smoothed_counts.csv"
     count_df.to_csv(counts_file_name)
     print("laplace-smoothed count matrix has been saved to {}".format(counts_file_name))
+    prob_df = laplace_model.get_prob_table()
+    prob_file_name = "laplace_probs_without_smoothing.csv"
+    prob_df.to_csv(prob_file_name)
+    print("laplace probs matrix has been saved to {}".format(prob_file_name))
+
     reconstitiuted_count_df = laplace_model.get_reconstituted_count_table()
     re_counts_file_name = "laplace_reconstituted_counts.csv"
     reconstitiuted_count_df.to_csv(re_counts_file_name)
     print("laplace reconstituted matrix has been saved to {}".format(
         re_counts_file_name))
-    prob_df = laplace_model.get_prob_table()
-    prob_file_name = "laplace_probs_without_smoothing.csv"
-    prob_df.to_csv(prob_file_name)
-    print("laplace probs matrix has been saved to {}".format(prob_file_name))
 
     # print how many times did I compute bigram and unigram
     # prob_df, num_bigrams, num_unigrams = katz_backoff_model.get_prob_table_and_compute_number()
@@ -114,7 +114,7 @@ def print_ans_1_a_5(trigram_model:  language_models.GramModel,
     prob_katz_list = []
     tokenized_list = []
     for s in s_list:
-        s_i_list = utils.parse_sentence(s)
+        s_i_list = utils.parse_sentence(s, pre_processeed=False)
         tokenized_list.append(s_i_list)
         p_base_s_i = trigram_model.predict(s_i_list)
         p_laplace_s_i = laplace_model.predict(s_i_list)
@@ -137,7 +137,7 @@ def print_ans_1_a_5(trigram_model:  language_models.GramModel,
 def read_problem2_cases() -> list:
     problem_cases = []
     s = input(
-        "Please input the word pairs. separate with \",\". Input q to end input.")
+        "Please input the word pairs. separate with \",\". Input q to end input.\n")
     while s != "q":
         problem_cases.append(tuple([word.strip() for word in s.split(",")]))
         s = input()
@@ -165,14 +165,14 @@ def print_ans_2_1(PPMI_model: semantic_models.PPMI, word_pair_list: list) -> Non
 def read_problem2_constraints_and_cases() -> tuple:
     constraint_words = []
     s = input(
-        "Please input the constraint words. Input q to end input.")
+        "Please input the constraint words. Input q to end input.\n")
     while s != "q":
         constraint_words.append(s.strip())
         s = input()
 
     test_cases = []
     s = input(
-        "Please input the constraint words. separate with \",\". Input q to end input.")
+        "Please input the constraint words. separate with \",\". Input q to end input.\n")
     while s != "q":
         test_cases.append(tuple([word.strip() for word in s.split(",")]))
         s = input()
