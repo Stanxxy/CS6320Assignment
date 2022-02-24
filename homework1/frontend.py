@@ -1,4 +1,3 @@
-from django.test import tag
 import utils
 import language_models
 import semantic_models
@@ -267,7 +266,6 @@ def print_ans_3() -> None:
 
 if __name__ == "__main__":
     # Corpus preparation
-
     corpus, preprocessed = read_file()
     tokenized_corpus = utils.construct_data_set(
         corpus, pre_processed=preprocessed)
