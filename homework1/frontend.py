@@ -74,14 +74,14 @@ def print_ans_1_a_234(trigram_model: language_models.GramModel,
                       katz_backoff_model: language_models.KatzModel) -> None:
 
     # # obtain counts and probs for baseline model
-    # count_df = trigram_model.get_count_table()
-    # counts_file_name = "trigram_counts_without_smoothing.csv"
-    # count_df.to_csv(counts_file_name)
-    # print("trigram counts matrix has been saved to {}".format(counts_file_name))
-    # prob_df = trigram_model.get_prob_table()
-    # prob_file_name = "trigram_probs_without_smoothing.csv"
-    # prob_df.to_csv(prob_file_name)
-    # print("trigram probs matrix has been saved to {}".format(prob_file_name))
+    count_df = trigram_model.get_count_table()
+    counts_file_name = "trigram_counts_without_smoothing.csv"
+    count_df.to_csv(counts_file_name)
+    print("trigram counts matrix has been saved to {}".format(counts_file_name))
+    prob_df = trigram_model.get_prob_table()
+    prob_file_name = "trigram_probs_without_smoothing.csv"
+    prob_df.to_csv(prob_file_name)
+    print("trigram probs matrix has been saved to {}".format(prob_file_name))
 
     # obtain counts and probs for laplace model
     count_df = laplace_model.get_count_table()
@@ -100,12 +100,12 @@ def print_ans_1_a_234(trigram_model: language_models.GramModel,
         re_counts_file_name))
 
     # print how many times did I compute bigram and unigram
-    # prob_df, num_bigrams, num_unigrams = katz_backoff_model.get_prob_table_and_compute_number()
-    # prob_file_name = "katz_probs_without_smoothing.csv"
-    # prob_df.to_csv(prob_file_name)
-    # print("katz probs matrix has been saved to {}".format(prob_file_name))
-    # print("We compute {} bigrams probabilities and {} unigrams probabilities".format(
-    #     num_bigrams, num_unigrams))
+    prob_df, num_bigrams, num_unigrams = katz_backoff_model.get_prob_table_and_compute_number()
+    prob_file_name = "katz_probs_without_smoothing.csv"
+    prob_df.to_csv(prob_file_name)
+    print("katz probs matrix has been saved to {}".format(prob_file_name))
+    print("We compute {} bigrams probabilities and {} unigrams probabilities".format(
+        num_bigrams, num_unigrams))
 
 
 def print_ans_1_a_5(trigram_model:  language_models.GramModel,
@@ -159,7 +159,7 @@ def print_ans_2_1(PPMI_model: semantic_models.PPMI, word_pair_list: list) -> Non
         similarity = PPMI_model.predict(pair[0], pair[1])
         similarities.append(similarity)
         print("for word {} and {}, their similarity valud is {}".format(
-            pair[0], pair[1], similarities))
+            pair[0], pair[1], similarities[-1]))
 
 # 2
 
