@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from multiprocessing.pool import Pool
-from nltk.tokenize import word_tokenize
+# from nltk.tokenize import word_tokenize
 # training set constructionj
 # testing set construction
 # IO scripts
@@ -11,10 +11,11 @@ EOS = "</s>"
 
 
 def parse_sentence(sentence: str, pre_processeed=True) -> list:
-    if pre_processeed:
-        return sentence.split()
-    else:
-        return word_tokenize(sentence)
+
+    # if pre_processeed:
+    return sentence.split()
+    # else:
+    # return word_tokenize(sentence)
 
 
 def parse_slice(sentence_list: list, pre_processeed=True) -> list:
