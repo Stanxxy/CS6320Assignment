@@ -17,16 +17,16 @@ def read_file() -> tuple:
         print("wrong path. check your path again.")
         exit()
 
-    seg_flag = input("Has your corpus been tokenized?[y/n]")
-    if seg_flag.lower() == 'y':
-        seg_flag = True
-    elif seg_flag.lower() == 'n':
-        seg_flag = False
-    else:
-        print("please input number that makes sense.")
-        exit()
+    # seg_flag = input("Has your corpus been tokenized?[y/n]")
+    # if seg_flag.lower() == 'y':
+    #     seg_flag = True
+    # elif seg_flag.lower() == 'n':
+    #     seg_flag = False
+    # else:
+    #     print("please input number that makes sense.")
+    #     exit()
 
-    return utils.read_from_disk(file_name), seg_flag
+    return utils.read_from_disk(file_name), True
 
 # Problem1
 
@@ -45,7 +45,7 @@ def construct_models(training_set) -> tuple:
 
 def read_problem1_cases() -> list:
     problem_cases = []
-    s = input("Please input test sentences. put q to end input.\n")
+    s = input("Please input test sentences. put q to end input. remember to seperate any punctuation and word.\n")
     while s != "q":
         problem_cases.append(s)
         s = input()
@@ -248,12 +248,11 @@ def print_ans_3() -> None:
     step = int(input(
         "print the transition probability and observation probability after how many steps? "))
     _, prob_a, prob_b = model.list_prob_of_after_x(bigram_1, step)
-    # print(prob_b)
+
     print("tag, status prob, observation prob")
     for i in range(model.tag_list.__len__()):
-        # print(i)
         print(model.tag_list[i], prob_a[i], prob_b[i])
-    # input("")
+
     viterbi_table, pointer_table, output_prob, bck_ptr = model.create_viterbi_table(
         bigram_1)
     print(viterbi_table)
