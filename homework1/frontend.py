@@ -1,6 +1,9 @@
+from django.test import tag
 import utils
 import language_models
 import semantic_models
+import POS_tagging_model
+import numpy as np
 import os
 # user interface
 # problem seelction
@@ -194,6 +197,74 @@ def print_ans_2_2(PPMI_model: semantic_models.PPMI, word_pair_list: list) -> Non
             pair[0], pair[1], similarities))
 
 
+def prepare_case_for_ans_3() -> tuple:
+    # feel free to modify these data and create your own model and case
+    matrix_A = np.array([
+        [0, 0.58, 0, 0, 0, 0.42, 0, 0],
+        [0, 0.07, 0, 0.05, 0.32, 0, 0, 0.25],
+        [0.07, 0.08, 0, 0, 0, 0, 0.2, 0.61],
+        [0.2, 0.3, 0, 0, 0, 0.24, 0.15, 0.11],
+        [0.18, 0.22, 0, 0, 0.2, 0.07, 0.16, 0.11],
+        [0, 0.88, 0, 0, 0, 0.12, 0, 0],
+        [0, 0, 0, 0.22, 0.28, 0.39, 0.1, 0],
+        [0.57, 0.28, 0, 0, 0, 0.15, 0, 0],
+    ])
+    tag_list = ["DT", "NN", "VB", "VBZ",
+                "VBN", "JJ", "RB", "IN"]
+    tag_bos_prob = np.array([0.38, 0.32, 0.04, 0, 0, 0.11, 0.01, 0.14])
+    tag_eos_prob = np.array([0, 0.11, 0.13, 0, 0.06, 0, 0.01, 0])
+    matrix_B = np.array([
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0.69, 1, 0.88, 1, 0, 0, 0.01, 0.66, 0.38, 0, 0, 0],
+        [0, 0, 0.31, 1, 0.12, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0.99, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.34, 0.62, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
+    ])
+
+    word_list = ["a", "the", "chair", "chairman", "board", "road", "is",
+                 "was", "found", "middle", "bold", "completely", "in", "of"]
+
+    s1 = "The chairman of the board is completely bold."
+    s2 = "A chair was found in the middle of the road."
+    bigram_1 = utils.compute_bigram_no_end_mark(
+        utils.parse_sentence(s1.lower(), pre_processeed=False))
+    bigram_2 = utils.compute_bigram_no_end_mark(
+        utils.parse_sentence(s2.lower(), pre_processeed=False))
+
+    return matrix_A, tag_bos_prob, tag_eos_prob, matrix_B, \
+        word_list, tag_list, bigram_1, bigram_2
+
+
+def print_ans_3() -> None:
+
+    matrix_A, tag_bos_prob, tag_eos_prob, matrix_B, \
+        word_list, tag_list, bigram_1, bigram_2 = prepare_case_for_ans_3()
+    model = POS_tagging_model.POSTagger()
+    model.setup_trasition(
+        matrix_A, matrix_B, tag_bos_prob, tag_eos_prob, word_list, tag_list)
+
+    step = int(input(
+        "print the transition probability and observation probability after how many steps? "))
+    _, prob_a, prob_b = model.list_prob_of_after_x(bigram_1, step)
+    # print(prob_b)
+    print("tag, status prob, observation prob")
+    for i in range(model.tag_list.__len__()):
+        # print(i)
+        print(model.tag_list[i], prob_a[i], prob_b[i])
+    # input("")
+    viterbi_table, pointer_table, output_prob, bck_ptr = model.create_viterbi_table(
+        bigram_1)
+    print(viterbi_table)
+    print(pointer_table)
+
+    likelihood, tag_list = model.find_prob(bigram_1)
+    print("The likelyhood is {}".format(likelihood))
+    print("tag is : {}".format(tag_list))
+
+
 if __name__ == "__main__":
     # Corpus preparation
 
@@ -216,3 +287,4 @@ if __name__ == "__main__":
     retrain_model(semantic_model, constraint_words)
     print_ans_2_2(semantic_model, problem2_new_cases)
     # problem3
+    print_ans_3()

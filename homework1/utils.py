@@ -72,6 +72,18 @@ def compute_bigram(sentence: list) -> list:
         return res
 
 
+def compute_bigram_no_end_mark(sentence: list) -> list:
+    sentence = sentence[:-1]  # remove "."
+    if sentence.__len__() == 0:
+        return [BOS] * 2
+    else:
+        sentence = [BOS] + sentence + [EOS]
+        res = []
+        for i in range(sentence.__len__() - 1):
+            res.append(tuple(sentence[i: i+2]))
+        return res
+
+
 def compute_unigram(sentence: list) -> list:
     if sentence.__len__() == 0:
         return [BOS] * 1
