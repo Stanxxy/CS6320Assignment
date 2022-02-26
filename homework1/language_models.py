@@ -400,35 +400,35 @@ class TestModels(unittest.TestCase):
         self.negative_sentence = " ".join(positive_tokens)
         return super().setUp()
 
-    # def test_1_GramModel(self):
-    #     model = GramModel(self.corpus)
-    #     model.train()
-    #     count_tb = model.get_count_table()
-    #     prob_tb = model.get_prob_table()
-    #     predicted_positive = model.predict(
-    #         utils.parse_sentence(self.positive_sentence))
-    #     predicted_negative = model.predict(
-    #         utils.parse_sentence(self.negative_sentence))
-    #     print("The head of counter table:\n", count_tb.head())
-    #     print("The head of probability table:\n", prob_tb.head())
-    #     print("positive sentence likelihood {}".format(predicted_positive))
-    #     print("negative sentence likelihood {}".format(predicted_negative))
+    def test_1_GramModel(self):
+        model = GramModel(self.corpus)
+        model.train()
+        count_tb = model.get_count_table()
+        prob_tb = model.get_prob_table()
+        predicted_positive = model.predict(
+            utils.parse_sentence(self.positive_sentence))
+        predicted_negative = model.predict(
+            utils.parse_sentence(self.negative_sentence))
+        print("The head of counter table:\n", count_tb.head())
+        print("The head of probability table:\n", prob_tb.head())
+        print("positive sentence likelihood {}".format(predicted_positive))
+        print("negative sentence likelihood {}".format(predicted_negative))
 
-    # def test_2_LaplaceModel(self):
-    #     model = LaplaceModel(self.corpus)
-    #     model.train()
-    #     count_tb = model.get_count_table()
-    #     prob_tb = model.get_prob_table()
-    #     reconstituted_tb = model.get_reconstituted_count_table()
-    #     predicted_positive = model.predict(
-    #         utils.parse_sentence(self.positive_sentence))
-    #     predicted_negative = model.predict(
-    #         utils.parse_sentence(self.negative_sentence))
-    #     print("The head of counter table:\n", count_tb.head())
-    #     print("The head of probability table:\n", prob_tb.head())
-    #     print("The head of reconstituted table:\n", reconstituted_tb.head())
-    #     print("positive sentence likelihood {}".format(predicted_positive))
-    #     print("negative sentence likelihood {}".format(predicted_negative))
+    def test_2_LaplaceModel(self):
+        model = LaplaceModel(self.corpus)
+        model.train()
+        count_tb = model.get_count_table()
+        prob_tb = model.get_prob_table()
+        reconstituted_tb = model.get_reconstituted_count_table()
+        predicted_positive = model.predict(
+            utils.parse_sentence(self.positive_sentence))
+        predicted_negative = model.predict(
+            utils.parse_sentence(self.negative_sentence))
+        print("The head of counter table:\n", count_tb.head())
+        print("The head of probability table:\n", prob_tb.head())
+        print("The head of reconstituted table:\n", reconstituted_tb.head())
+        print("positive sentence likelihood {}".format(predicted_positive))
+        print("negative sentence likelihood {}".format(predicted_negative))
 
     def test_3_KatzModel(self):
         model = KatzModel(self.corpus)
