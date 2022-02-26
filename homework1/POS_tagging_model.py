@@ -164,7 +164,7 @@ class POSTagger:
 
         def find_path(tags: list, backpointer: np.ndarray, output_ptr: int) -> list:
             path = []
-            n = backpointer.__len__()
+            n = backpointer[0].__len__()
             # int(backpointer[n-1, tags.__len__() - 1])
             last_pointer = output_ptr
             path.insert(0, tags[last_pointer])

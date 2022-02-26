@@ -10,7 +10,6 @@
 - supportive packages including:
   - pandas
   - numpy
-  - nltk
 
 * description for each script:
 
@@ -36,7 +35,7 @@ python3 -m venv $PATH_TO_NEW_VIRTUAL_ENVIRONMENT
 - To install all the neede packages, you could use
 
 ```
-$PATH_TO_NEW_VIRTUAL_ENVIRONMENT/bin/pip install -r requirements.txt
+$PATH_TO_NEW_VIRTUAL_ENVIRONMENT/bin/pip install numpy pandas
 ```
 
 - Be aware that the requirements.txt is fit for running on UTD graduate server with a python version of 3.5.1 . There's no gurantee on using the requirements.txt file on other machines. If you use pip with a lower version of python3 or on other machines, package version clashes may appear.
@@ -56,7 +55,3 @@ $PATH_TO_NEW_VIRTUAL_ENVIRONMENT/bin/python frontend.py
 ## How to see result
 
 - Some of the easy results are available from the console. However, for result with giant output (like the count tables or probability tables). We store the result into an extra csv file that can be visulized via third party tools (like pandas or excel).
-
-## About document
-
--

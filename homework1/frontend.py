@@ -45,7 +45,8 @@ def construct_models(training_set) -> tuple:
 
 def read_problem1_cases() -> list:
     problem_cases = []
-    s = input("Please input test sentences. put q to end input. remember to seperate any punctuation and word.\n")
+    s = input(
+        "Please input test sentences. put q to end input. remember to seperate any punctuation and word.\n")
     while s != "q":
         problem_cases.append(s)
         s = input()
@@ -128,10 +129,10 @@ def print_ans_1_a_5(trigram_model:  language_models.GramModel,
         print("The probability of sentence {} predicted by for trigram model is: {}".format(
             i, prob_base_list[i]))
     for i, s in enumerate(s_list):
-        print("The probability of sentence {} predicted by for trigram model is: {}".format(
+        print("The probability of sentence {} predicted by for Laplace model is: {}".format(
             i, prob_laplace_list[i]))
     for i, s in enumerate(s_list):
-        print("The probability of sentence {} predicted by for trigram model is: {}".format(
+        print("The probability of sentence {} predicted by for Katz model is: {}".format(
             i, prob_katz_list[i]))
 
 
@@ -174,7 +175,7 @@ def read_problem2_constraints_and_cases() -> tuple:
 
     test_cases = []
     s = input(
-        "Please input the constraint words. separate with \",\". Input q to end input.\n")
+        "Please input the word pairs to be tested. separate with \",\". Input q to end input.\n")
     while s != "q":
         test_cases.append(tuple([word.strip() for word in s.split(",")]))
         s = input()
@@ -193,7 +194,7 @@ def print_ans_2_2(PPMI_model: semantic_models.PPMI, word_pair_list: list) -> Non
             pair[0], pair[1])
         similarities.append(similarity)
         print("Given the context constraint, for word {} and {}, their similarity valud is {}".format(
-            pair[0], pair[1], similarities))
+            pair[0], pair[1], similarities[-1]))
 
 
 def prepare_case_for_ans_3() -> tuple:
@@ -226,41 +227,44 @@ def prepare_case_for_ans_3() -> tuple:
     word_list = ["a", "the", "chair", "chairman", "board", "road", "is",
                  "was", "found", "middle", "bold", "completely", "in", "of"]
 
-    s1 = "The chairman of the board is completely bold."
-    s2 = "A chair was found in the middle of the road."
+    s1 = "The chairman of the board is completely bold ."
+    s2 = "A chair was found in the middle of the road ."
     bigram_1 = utils.compute_bigram_no_end_mark(
         utils.parse_sentence(s1.lower(), pre_processeed=False))
     bigram_2 = utils.compute_bigram_no_end_mark(
         utils.parse_sentence(s2.lower(), pre_processeed=False))
 
     return matrix_A, tag_bos_prob, tag_eos_prob, matrix_B, \
-        word_list, tag_list, bigram_1, bigram_2
+        word_list, tag_list, [bigram_1, bigram_2]
 
 
 def print_ans_3() -> None:
 
     matrix_A, tag_bos_prob, tag_eos_prob, matrix_B, \
-        word_list, tag_list, bigram_1, bigram_2 = prepare_case_for_ans_3()
+        word_list, tag_list, bigram_list = prepare_case_for_ans_3()
     model = POS_tagging_model.POSTagger()
     model.setup_trasition(
         matrix_A, matrix_B, tag_bos_prob, tag_eos_prob, word_list, tag_list)
+    for index, bigram in enumerate(bigram_list):
+        step = int(input(
+            "print the transition probability and observation probability after how many steps? "))
+        _, prob_a, prob_b = model.list_prob_of_after_x(bigram, step)
 
-    step = int(input(
-        "print the transition probability and observation probability after how many steps? "))
-    _, prob_a, prob_b = model.list_prob_of_after_x(bigram_1, step)
+        print("for sentence {}, tag, status prob, observation prob".format(index))
+        for i in range(model.tag_list.__len__()):
+            print(model.tag_list[i], prob_a[i], prob_b[i])
 
-    print("tag, status prob, observation prob")
-    for i in range(model.tag_list.__len__()):
-        print(model.tag_list[i], prob_a[i], prob_b[i])
+        viterbi_table, pointer_table, output_prob, bck_ptr = model.create_viterbi_table(
+            bigram)
+        print("viterbi table {}".format(index))
+        viterbi_table.to_csv("viterbi_table_sent_{}.csv".format(index))
+        # print(viterbi_table)
+        # print("observation table {}".format(index))
+        # print(pointer_table)
 
-    viterbi_table, pointer_table, output_prob, bck_ptr = model.create_viterbi_table(
-        bigram_1)
-    print(viterbi_table)
-    print(pointer_table)
-
-    likelihood, tag_list = model.find_prob(bigram_1)
-    print("The likelyhood is {}".format(likelihood))
-    print("tag is : {}".format(tag_list))
+        likelihood, tag_list = model.find_prob(bigram)
+        print("The likelyhood for sentence {} is {}".format(index, likelihood))
+        print("tag is : {}".format(tag_list))
 
 
 if __name__ == "__main__":
